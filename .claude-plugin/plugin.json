@@ -4,5 +4,7 @@
   "version": "0.1.0",
   "author": {
     "name": "axect"
-  }
+  },
+  "repository": "https://github.com/axect/gemini-discuss",
+  "homepage": "https://github.com/axect/gemini-discuss"
 }
