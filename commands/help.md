@@ -17,22 +17,22 @@ Discuss with Gemini using the correct model (`gemini-3-pro-preview`). All comman
 
 | Command | Description |
 |---------|-------------|
-| `/gemini discuss <topic>` | General discussion with Gemini based on current context |
-| `/gemini review [file]` | Code review of changes or a specific file |
-| `/gemini brainstorm <topic>` | Generate ideas with structured methodology |
-| `/gemini analyze <file/topic>` | Deep analysis of a file or topic |
-| `/gemini compare <topic>` | Compare Claude and Gemini perspectives |
-| `/gemini help` | Show this help message |
+| `/gemini-discuss discuss <topic>` | General discussion with Gemini based on current context |
+| `/gemini-discuss review [file]` | Code review of changes or a specific file |
+| `/gemini-discuss brainstorm <topic>` | Generate ideas with structured methodology |
+| `/gemini-discuss analyze <file/topic>` | Deep analysis of a file or topic |
+| `/gemini-discuss compare <topic>` | Compare Claude and Gemini perspectives |
+| `/gemini-discuss help` | Show this help message |
 
 ### Alternative Invocation
 
 All commands can also be called with colon syntax:
-- `/gemini:discuss <topic>`
-- `/gemini:review [file]`
-- `/gemini:brainstorm <topic>`
-- `/gemini:analyze <file/topic>`
-- `/gemini:compare <topic>`
-- `/gemini:help`
+- `/gemini-discuss:discuss <topic>`
+- `/gemini-discuss:review [file]`
+- `/gemini-discuss:brainstorm <topic>`
+- `/gemini-discuss:analyze <file/topic>`
+- `/gemini-discuss:compare <topic>`
+- `/gemini-discuss:help`
 
 ### How It Works
 
