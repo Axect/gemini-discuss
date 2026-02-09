@@ -1,0 +1,15 @@
+{
+  "name": "gemini-discuss",
+  "owner": {
+    "name": "axect",
+    "url": "https://github.com/Axect"
+  },
+  "plugins": [
+    {
+      "name": "gemini-discuss",
+      "source": "./",
+      "description": "Discuss with Gemini using the correct model (gemini-3-pro-preview). Calls Gemini CLI directly — no MCP server required.",
+      "version": "0.1.0"
+    }
+  ]
+}

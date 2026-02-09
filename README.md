@@ -30,7 +30,11 @@ All commands can also be invoked as `/gemini:<subcommand>`.
 ## Installation
 
 ```bash
-claude plugin add axect/gemini-discuss
+# 1. Add the marketplace
+claude plugin marketplace add Axect/gemini-discuss
+
+# 2. Install the plugin
+claude plugin install gemini-discuss
 ```
 
 ## Requirements
