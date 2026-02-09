@@ -1,0 +1,7 @@
+{
+  "name": "gemini-discuss",
+  "description": "Discuss with Gemini using the correct model (gemini-3-pro-preview). Provides slash commands for discussion, code review, brainstorming, analysis, and perspective comparison.",
+  "author": {
+    "name": "axect"
+  }
+}
