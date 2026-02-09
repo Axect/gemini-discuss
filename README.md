@@ -4,7 +4,7 @@ A Claude Code plugin for discussing with Gemini using the correct model (`gemini
 
 ## Problem
 
-The `gemini-mcp-tool` defaults to `gemini-2.5-pro`, and modifying npm cache files is fragile. This plugin ensures every Gemini call explicitly passes `model: "gemini-3-pro-preview"` while providing convenient slash commands.
+The Gemini CLI defaults to a different model, and remembering to pass `-m gemini-3-pro-preview` every time is error-prone. This plugin ensures every Gemini call explicitly uses the correct model while providing convenient slash commands with automatic project context gathering.
 
 ## Commands
 
@@ -12,7 +12,7 @@ The `gemini-mcp-tool` defaults to `gemini-2.5-pro`, and modifying npm cache file
 |---------|-------------|
 | `/gemini discuss <topic>` | General discussion with Gemini based on current context |
 | `/gemini review [file]` | Code review of changes or a specific file |
-| `/gemini brainstorm <topic>` | Generate ideas using Gemini's brainstorm tool |
+| `/gemini brainstorm <topic>` | Generate ideas using structured methodology |
 | `/gemini analyze <file/topic>` | Deep analysis of a file or topic |
 | `/gemini compare <topic>` | Compare Claude and Gemini perspectives |
 | `/gemini help` | Show usage help |
@@ -22,8 +22,10 @@ All commands can also be invoked as `/gemini:<subcommand>`.
 ## Features
 
 - **Model enforcement**: Always uses `gemini-3-pro-preview`, never the default
+- **No MCP dependency**: Calls Gemini CLI directly — no MCP server required
 - **Auto context collection**: Gathers git state, recent files, and project info before each call
 - **Smart routing**: `/gemini <anything>` routes unknown subcommands to `discuss`
+- **Structured brainstorming**: Automatically selects methodology (SCAMPER, Design Thinking, First Principles, etc.) based on topic
 
 ## Installation
 
@@ -34,7 +36,7 @@ claude plugin add axect/gemini-discuss
 ## Requirements
 
 - [Claude Code](https://claude.com/claude-code) CLI
-- [gemini-mcp-tool](https://www.npmjs.com/package/gemini-mcp-tool) MCP server configured
+- [Gemini CLI](https://github.com/google-gemini/gemini-cli) installed and authenticated
 
 ## License
 

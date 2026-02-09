@@ -11,7 +11,7 @@ Display the following help information to the user:
 
 ## gemini-discuss Plugin
 
-Discuss with Gemini using the correct model (`gemini-3-pro-preview`). All commands automatically collect project context and enforce the correct model.
+Discuss with Gemini using the correct model (`gemini-3-pro-preview`). All commands automatically collect project context and call the Gemini CLI directly.
 
 ### Available Commands
 
@@ -19,7 +19,7 @@ Discuss with Gemini using the correct model (`gemini-3-pro-preview`). All comman
 |---------|-------------|
 | `/gemini discuss <topic>` | General discussion with Gemini based on current context |
 | `/gemini review [file]` | Code review of changes or a specific file |
-| `/gemini brainstorm <topic>` | Generate ideas using Gemini's brainstorm tool |
+| `/gemini brainstorm <topic>` | Generate ideas with structured methodology |
 | `/gemini analyze <file/topic>` | Deep analysis of a file or topic |
 | `/gemini compare <topic>` | Compare Claude and Gemini perspectives |
 | `/gemini help` | Show this help message |
@@ -34,9 +34,9 @@ All commands can also be called with colon syntax:
 - `/gemini:compare <topic>`
 - `/gemini:help`
 
-### Model Enforcement
+### How It Works
 
-This plugin always passes `model: "gemini-3-pro-preview"` explicitly to every Gemini MCP tool call, ensuring the correct model is used regardless of the MCP server's default configuration.
+This plugin calls the Gemini CLI (`gemini -m gemini-3-pro-preview`) directly via Bash, ensuring the correct model is always used. No MCP server dependency required — only the Gemini CLI needs to be installed.
 
 ### Context Collection
 

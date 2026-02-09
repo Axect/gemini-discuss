@@ -18,26 +18,26 @@ Parse the first word of `$ARGUMENTS` as the subcommand, and the rest as argument
 
 | First Word | Action |
 |------------|--------|
-| `discuss` | Invoke `/gemini:discuss` with remaining args |
-| `review` | Invoke `/gemini:review` with remaining args |
-| `brainstorm` | Invoke `/gemini:brainstorm` with remaining args |
-| `analyze` | Invoke `/gemini:analyze` with remaining args |
-| `compare` | Invoke `/gemini:compare` with remaining args |
-| `help` | Invoke `/gemini:help` |
-| (empty) | Invoke `/gemini:help` |
-| (anything else) | Treat entire `$ARGUMENTS` as a discuss topic — invoke `/gemini:discuss` with full `$ARGUMENTS` |
+| `discuss` | Invoke `/gemini-discuss:discuss` with remaining args |
+| `review` | Invoke `/gemini-discuss:review` with remaining args |
+| `brainstorm` | Invoke `/gemini-discuss:brainstorm` with remaining args |
+| `analyze` | Invoke `/gemini-discuss:analyze` with remaining args |
+| `compare` | Invoke `/gemini-discuss:compare` with remaining args |
+| `help` | Invoke `/gemini-discuss:help` |
+| (empty) | Invoke `/gemini-discuss:help` |
+| (anything else) | Treat entire `$ARGUMENTS` as a discuss topic — invoke `/gemini-discuss:discuss` with full `$ARGUMENTS` |
 
 ## Execution
 
 Use the Skill tool to invoke the appropriate subcommand. For example:
 - Input: `discuss how should I structure this API`
-  → Invoke Skill with `skill: "gemini:discuss"` and `args: "how should I structure this API"`
+  → Invoke Skill with `skill: "gemini-discuss:discuss"` and `args: "how should I structure this API"`
 - Input: `review src/main.rs`
-  → Invoke Skill with `skill: "gemini:review"` and `args: "src/main.rs"`
+  → Invoke Skill with `skill: "gemini-discuss:review"` and `args: "src/main.rs"`
 - Input: `help`
-  → Invoke Skill with `skill: "gemini:help"`
+  → Invoke Skill with `skill: "gemini-discuss:help"`
 - Input: `이 아키텍처 괜찮아?`
-  → No known subcommand, so invoke Skill with `skill: "gemini:discuss"` and `args: "이 아키텍처 괜찮아?"`
+  → No known subcommand, so invoke Skill with `skill: "gemini-discuss:discuss"` and `args: "이 아키텍처 괜찮아?"`
 
 ## CRITICAL RULES
 

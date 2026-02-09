@@ -1,7 +1,7 @@
 ---
 description: Deep analysis of a file or topic with Gemini
 argument-hint: <file_path or topic>
-allowed-tools: ["Bash", "Read", "Grep", "Glob"]
+allowed-tools: ["Bash", "Read", "Write", "Grep", "Glob"]
 ---
 
 # Gemini Analyze
@@ -47,26 +47,33 @@ sh "${CLAUDE_PLUGIN_ROOT}/scripts/gather-context.sh" .
 
 ## Step 3: Call Gemini for Analysis
 
-Call `mcp__gemini-cli__ask-gemini` with:
-- **model**: `"gemini-3-pro-preview"` (MANDATORY - never omit this parameter)
-- **prompt**: Structure the analysis request:
+Write the full prompt to `/tmp/gemini-discuss-prompt.txt` using the Write tool.
 
 **For File Analysis:**
+
 ```
-Perform a deep analysis of the following file and its role in the project.
+<role>
+You are a senior software architect performing a deep code analysis.
+Provide actionable insights, not generic observations.
+</role>
 
-Project context:
-{context from gather-context.sh}
+<project_context>
+{paste gather-context.sh output here}
+</project_context>
 
-Target file: {filepath}
-Related files that reference it: {list}
-Test files: {list}
+<target_file>
+Path: {filepath}
+Contents:
+{paste file contents here}
+</target_file>
 
-@{target_filepath}
-@{related_file_1}
-@{related_file_2}
+<related_files>
+{paste related file contents with paths as headers}
+</related_files>
 
-Please analyze:
+<instructions>
+Perform a deep analysis of the target file and its role in the project.
+
 1. **Purpose & Responsibility**: What does this file do? Is it well-scoped?
 2. **Architecture**: How does it fit into the overall project? Dependencies and dependents.
 3. **Code Quality**: Complexity, readability, maintainability assessment.
@@ -74,24 +81,32 @@ Please analyze:
 5. **Improvement Opportunities**: Refactoring suggestions, performance optimizations.
 6. **Test Coverage**: Are the tests adequate? What's missing?
 
-Provide a structured analysis report.
+Provide a structured analysis report with specific line references.
+</instructions>
 ```
 
 **For Topic Analysis:**
+
 ```
-Perform a deep analysis of the following topic in the context of this project.
+<role>
+You are a senior software architect performing a deep analysis of a technical topic within a project.
+</role>
 
-Project context:
-{context from gather-context.sh}
+<project_context>
+{paste gather-context.sh output here}
+</project_context>
 
-Topic: {$ARGUMENTS}
+<topic>
+{$ARGUMENTS}
+</topic>
 
-Relevant files found:
-@{file1}
-@{file2}
-...
+<relevant_code>
+{paste relevant file contents with paths as headers}
+</relevant_code>
 
-Please analyze:
+<instructions>
+Perform a deep analysis of the topic in the context of this project.
+
 1. **Current State**: How is this topic currently handled in the project?
 2. **Strengths**: What's working well?
 3. **Weaknesses**: What could be improved?
@@ -100,6 +115,13 @@ Please analyze:
 6. **Implementation Path**: If changes are needed, suggest an approach.
 
 Provide a structured analysis report.
+</instructions>
+```
+
+Then run via Bash:
+
+```
+cat /tmp/gemini-discuss-prompt.txt | gemini -m gemini-3-pro-preview && rm -f /tmp/gemini-discuss-prompt.txt
 ```
 
 ## Step 4: Present Analysis
@@ -113,7 +135,7 @@ Display Gemini's analysis as a structured report. Add a footer:
 
 ## CRITICAL RULES
 
-1. **ALWAYS** pass `model: "gemini-3-pro-preview"` to `mcp__gemini-cli__ask-gemini`. Never omit it.
-2. Do NOT use `gemini-2.5-pro` or any other model.
-3. Always include related files for comprehensive analysis — not just the target file in isolation.
-4. Use `@filepath` syntax to include file contents for Gemini to read.
+1. **ALWAYS** pass `-m gemini-3-pro-preview` to the gemini CLI. Never omit it.
+2. Always include related files for comprehensive analysis — not just the target file in isolation.
+3. Always write the prompt to a temp file and pipe it — never embed large prompts in shell arguments.
+4. Clean up the temp file after the call.

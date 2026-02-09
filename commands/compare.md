@@ -1,7 +1,7 @@
 ---
 description: Compare Claude and Gemini perspectives on a topic
 argument-hint: <topic>
-allowed-tools: ["Bash", "Read", "Grep", "Glob"]
+allowed-tools: ["Bash", "Read", "Write", "Grep", "Glob"]
 ---
 
 # Gemini vs Claude Compare
@@ -25,19 +25,23 @@ Use Grep and Glob to find files relevant to the topic. Read the most relevant on
 
 ## Step 2: Get Gemini's Perspective
 
-Call `mcp__gemini-cli__ask-gemini` with:
-- **model**: `"gemini-3-pro-preview"` (MANDATORY - never omit this parameter)
-- **prompt**:
+Write the full prompt to `/tmp/gemini-discuss-prompt.txt` using the Write tool:
 
 ```
-Project context:
-{context from gather-context.sh}
+<project_context>
+{paste gather-context.sh output here}
+</project_context>
 
-Topic: {$ARGUMENTS}
+<topic>
+{$ARGUMENTS}
+</topic>
 
-@{relevant_files}
+<relevant_code>
+{paste relevant file contents with paths as headers}
+</relevant_code>
 
-Please provide your detailed perspective on this topic. Include:
+<instructions>
+Provide your detailed perspective on this topic. Include:
 1. Your assessment and position
 2. Key considerations and trade-offs
 3. Recommended approach with rationale
@@ -45,6 +49,13 @@ Please provide your detailed perspective on this topic. Include:
 5. Specific suggestions for implementation (if applicable)
 
 Be direct and opinionated — I want to compare your view with another AI's perspective.
+</instructions>
+```
+
+Then run via Bash:
+
+```
+cat /tmp/gemini-discuss-prompt.txt | gemini -m gemini-3-pro-preview && rm -f /tmp/gemini-discuss-prompt.txt
 ```
 
 ## Step 3: Formulate Claude's Perspective
@@ -91,8 +102,9 @@ Display the results in a clear comparison format:
 
 ## CRITICAL RULES
 
-1. **ALWAYS** pass `model: "gemini-3-pro-preview"` to `mcp__gemini-cli__ask-gemini`. Never omit it.
-2. Do NOT use `gemini-2.5-pro` or any other model.
-3. Be genuinely opinionated in Claude's perspective — don't just echo Gemini.
-4. The synthesis should add value beyond either individual perspective.
-5. Highlight disagreements honestly — that's the whole point of comparing.
+1. **ALWAYS** pass `-m gemini-3-pro-preview` to the gemini CLI. Never omit it.
+2. Be genuinely opinionated in Claude's perspective — don't just echo Gemini.
+3. The synthesis should add value beyond either individual perspective.
+4. Highlight disagreements honestly — that's the whole point of comparing.
+5. Always write the prompt to a temp file and pipe it — never embed large prompts in shell arguments.
+6. Clean up the temp file after the call.

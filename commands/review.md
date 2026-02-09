@@ -1,7 +1,7 @@
 ---
 description: Get a Gemini code review of changes or a specific file
 argument-hint: "[file_path]"
-allowed-tools: ["Bash", "Read", "Grep", "Glob"]
+allowed-tools: ["Bash", "Read", "Write", "Grep", "Glob"]
 ---
 
 # Gemini Code Review
@@ -35,28 +35,33 @@ Also check if there's a CLAUDE.md or similar project conventions file:
 
 ## Step 3: Call Gemini for Review
 
-Call `mcp__gemini-cli__ask-gemini` with:
-- **model**: `"gemini-3-pro-preview"` (MANDATORY - never omit this parameter)
-- **prompt**: Structure the review request as follows:
+Write the full prompt to `/tmp/gemini-discuss-prompt.txt` using the Write tool:
 
 ```
-You are reviewing code changes. Please provide a thorough code review.
+<role>
+You are a Senior Principal Engineer conducting a thorough code review.
+Your tone is objective, critical yet constructive.
+</role>
 
-Project context:
-{context from gather-context.sh}
+<project_context>
+{paste gather-context.sh output here}
+</project_context>
 
-Project conventions (if found):
-{conventions from CLAUDE.md}
+<coding_standards>
+{paste conventions from CLAUDE.md if found, otherwise "Follow standard idioms for this language."}
+</coding_standards>
 
-Code to review:
-{diff or file contents}
+<code_to_review>
+{paste the diff or file contents here}
+</code_to_review>
 
-Please review for:
-1. **Bugs & Logic Errors**: Identify potential bugs, edge cases, or logic issues
-2. **Security**: Flag any security concerns (injection, XSS, sensitive data exposure, etc.)
-3. **Performance**: Note any performance concerns or optimization opportunities
-4. **Code Quality**: Assess readability, naming, structure, and adherence to conventions
-5. **Best Practices**: Suggest improvements based on language/framework best practices
+<instructions>
+Review the code above. Focus on:
+1. **Correctness**: Bugs, race conditions, edge cases, logic errors
+2. **Security**: Injection flaws, auth issues, sensitive data exposure
+3. **Performance**: Algorithmic complexity, memory leaks, unnecessary allocations
+4. **Code Quality**: Readability, naming, structure, adherence to project conventions
+5. **Best Practices**: Language/framework idioms and patterns
 
 Format your review with severity levels:
 - 🔴 Critical: Must fix before merge
@@ -64,7 +69,15 @@ Format your review with severity levels:
 - 🟢 Suggestion: Nice-to-have improvements
 - ℹ️ Note: Informational observations
 
-@{filepath if reviewing a specific file}
+For each finding, provide the specific code location and a corrected code snippet when applicable.
+End with a brief overall assessment.
+</instructions>
+```
+
+Then run via Bash:
+
+```
+cat /tmp/gemini-discuss-prompt.txt | gemini -m gemini-3-pro-preview && rm -f /tmp/gemini-discuss-prompt.txt
 ```
 
 ## Step 4: Present Review Results
@@ -78,7 +91,7 @@ Display Gemini's review, organized by severity. Add a footer:
 
 ## CRITICAL RULES
 
-1. **ALWAYS** pass `model: "gemini-3-pro-preview"` to `mcp__gemini-cli__ask-gemini`. Never omit it.
-2. Do NOT use `gemini-2.5-pro` or any other model.
-3. Always include project conventions in the review context when available.
-4. Use `@filepath` syntax to include file contents for specific file reviews.
+1. **ALWAYS** pass `-m gemini-3-pro-preview` to the gemini CLI. Never omit it.
+2. Always include project conventions in the review context when available.
+3. Always write the prompt to a temp file and pipe it — never embed large prompts in shell arguments.
+4. Clean up the temp file after the call.
